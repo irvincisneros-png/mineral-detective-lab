@@ -1,0 +1,6 @@
+.DS_Store
+.sites-runtime/
+.playwright-cli/
+playwright-report/
+test-results/
+output/playwright/

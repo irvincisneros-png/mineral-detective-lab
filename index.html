@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07131f" />
+    <meta
+      name="description"
+      content="An original, interactive mineral identification virtual lab for secondary science students."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307131f'/%3E%3Cpath d='M13 24 31 9l21 13-7 29H20Z' fill='%233dd6d0'/%3E%3Cpath d='m31 9 5 27 16-14M13 24l23 12-16 15' fill='none' stroke='%23fff3d1' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <title>Mineral Detective Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#lab">Skip to the lab</a>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◇</span>
+        <div>
+          <p class="eyebrow">Earth Science · Virtual Investigation</p>
+          <h1>Mineral Detective Lab</h1>
+        </div>
+      </div>
+      <div class="session-stats" aria-label="Investigation progress">
+        <div><span>Case</span><strong id="case-count">1 / 5</strong></div>
+        <div><span>Score</span><strong id="score">0</strong></div>
+        <button class="icon-button" id="help-button" type="button" aria-label="Open instructions">?</button>
+      </div>
+    </header>
+
+    <main id="lab" class="lab-shell">
+      <section class="specimen-panel panel" aria-labelledby="specimen-heading">
+        <div class="panel-heading">
+          <div>
+            <p class="step-label">Specimen</p>
+            <h2 id="specimen-heading">Unknown <span id="sample-code">MX-104</span></h2>
+          </div>
+          <span class="status-pill" id="case-status">In progress</span>
+        </div>
+
+        <div class="specimen-stage" aria-label="Unknown mineral specimen">
+          <div class="sample-shadow"></div>
+          <div class="sample" id="sample-visual" role="img" aria-label="A close view of the unknown mineral specimen">
+            <span class="sample-glint"></span>
+          </div>
+          <div class="scale-rule" aria-hidden="true"><span>0</span><i></i><i></i><i></i><i></i><span>2 cm</span></div>
+        </div>
+
+        <div class="briefing">
+          <p class="mono-label">FIELD NOTE 01</p>
+          <p>Test the specimen, record reliable evidence, then use the identification key. You can repeat any test and there is no time limit.</p>
+        </div>
+
+        <button class="secondary-button full-width" id="new-case" type="button">Start a different case</button>
+      </section>
+
+      <section class="workbench panel" aria-labelledby="workbench-heading">
+        <div class="panel-heading">
+          <div>
+            <p class="step-label">Investigation</p>
+            <h2 id="workbench-heading">Choose a test</h2>
+          </div>
+          <span class="test-count"><strong id="tests-complete">0</strong>/6 complete</span>
+        </div>
+
+        <div class="test-grid" id="test-grid">
+          <button class="test-card" data-test="mass" type="button">
+            <span class="test-icon" aria-hidden="true">⚖</span>
+            <span><strong>Measure mass</strong><small>Electronic balance</small></span>
+            <span class="test-state" aria-hidden="true">＋</span>
+          </button>
+          <button class="test-card" data-test="volume" type="button">
+            <span class="test-icon" aria-hidden="true">⌁</span>
+            <span><strong>Measure volume</strong><small>Water displacement</small></span>
+            <span class="test-state" aria-hidden="true">＋</span>
+          </button>
+          <button class="test-card" data-test="luster" type="button">
+            <span class="test-icon" aria-hidden="true">✦</span>
+            <span><strong>Observe luster</strong><small>Reflected light</small></span>
+            <span class="test-state" aria-hidden="true">＋</span>
+          </button>
+          <button class="test-card" data-test="hardness" type="button">
+            <span class="test-icon" aria-hidden="true">⌖</span>
+            <span><strong>Test hardness</strong><small>Mohs scratch tools</small></span>
+            <span class="test-state" aria-hidden="true">＋</span>
+          </button>
+          <button class="test-card" data-test="streak" type="button">
+            <span class="test-icon" aria-hidden="true">≋</span>
+            <span><strong>Make a streak</strong><small>Unglazed tile</small></span>
+            <span class="test-state" aria-hidden="true">＋</span>
+          </button>
+          <button class="test-card" data-test="acid" type="button">
+            <span class="test-icon" aria-hidden="true">⌇</span>
+            <span><strong>Add dilute acid</strong><small>Reaction test</small></span>
+            <span class="test-state" aria-hidden="true">＋</span>
+          </button>
+        </div>
+
+        <div class="result-console" id="result-console" aria-live="polite">
+          <div class="console-idle">
+            <span aria-hidden="true">↖</span>
+            <p>Select a test to collect your first observation.</p>
+          </div>
+        </div>
+
+        <div class="calculation-card" id="density-card">
+          <div>
+            <p class="mono-label">DENSITY CALCULATION</p>
+            <p>Density = mass ÷ volume</p>
+          </div>
+          <div class="equation">
+            <span id="mass-value">—</span><b>÷</b><span id="volume-value">—</span><b>=</b><strong id="density-value">—</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="notebook panel" aria-labelledby="notebook-heading">
+        <div class="panel-heading">
+          <div>
+            <p class="step-label">Evidence</p>
+            <h2 id="notebook-heading">Lab notebook</h2>
+          </div>
+          <button class="text-button" id="key-button" type="button">View ID key</button>
+        </div>
+
+        <dl class="evidence-list" id="evidence-list">
+          <div data-evidence="mass"><dt>Mass</dt><dd>Not measured</dd></div>
+          <div data-evidence="volume"><dt>Volume</dt><dd>Not measured</dd></div>
+          <div data-evidence="density"><dt>Density</dt><dd>Needs mass + volume</dd></div>
+          <div data-evidence="luster"><dt>Luster</dt><dd>Not observed</dd></div>
+          <div data-evidence="hardness"><dt>Hardness</dt><dd>Not tested</dd></div>
+          <div data-evidence="streak"><dt>Streak</dt><dd>Not tested</dd></div>
+          <div data-evidence="acid"><dt>Acid reaction</dt><dd>Not tested</dd></div>
+        </dl>
+
+        <form class="identify-form" id="identify-form">
+          <label for="mineral-choice">Identify the mineral</label>
+          <div class="select-wrap">
+            <select id="mineral-choice" required>
+              <option value="">Choose from the key…</option>
+            </select>
+          </div>
+          <button class="primary-button" id="submit-answer" type="submit">Submit identification</button>
+          <p class="answer-feedback" id="answer-feedback" aria-live="polite"></p>
+        </form>
+      </aside>
+    </main>
+
+    <dialog id="key-dialog" class="key-dialog">
+      <div class="dialog-header">
+        <div><p class="step-label">Reference</p><h2>Mineral identification key</h2></div>
+        <button class="icon-button" data-close-dialog type="button" aria-label="Close identification key">×</button>
+      </div>
+      <p class="dialog-intro">Compare several properties. A single test is rarely enough for a secure identification.</p>
+      <div class="key-table-wrap">
+        <table>
+          <thead><tr><th>Mineral</th><th>Density</th><th>Luster</th><th>Hardness</th><th>Streak</th><th>Acid</th></tr></thead>
+          <tbody id="key-table-body"></tbody>
+        </table>
+      </div>
+    </dialog>
+
+    <dialog id="help-dialog" class="help-dialog">
+      <div class="dialog-header">
+        <div><p class="step-label">How to play</p><h2>Build a case from evidence</h2></div>
+        <button class="icon-button" data-close-dialog type="button" aria-label="Close instructions">×</button>
+      </div>
+      <ol>
+        <li>Run tests on the unknown mineral. Each completed test records an observation.</li>
+        <li>Measure both mass and volume to calculate density automatically.</li>
+        <li>Open the identification key and compare multiple properties.</li>
+        <li>Submit your identification. Earlier correct answers earn more points.</li>
+      </ol>
+      <p>Your progress is not timed. Use evidence, not guessing.</p>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
